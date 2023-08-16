@@ -17,8 +17,8 @@ public class UserEntity {
     private String phoneNumber;
     @Column(nullable = false)
     private String password;
-    @OneToMany(mappedBy = "user")
-    private List<ReservationEntity> usersReservation;
+    @Column(nullable = false)
+    private boolean admin = false;
 
     public long getId() {
         return id;
@@ -60,11 +60,5 @@ public class UserEntity {
         this.password = password;
     }
 
-    public List<ReservationEntity> getUsersReservation() {
-        return usersReservation;
-    }
 
-    public void setUsersReservation(List<ReservationEntity> usersReservation) {
-        this.usersReservation = usersReservation;
-    }
 }

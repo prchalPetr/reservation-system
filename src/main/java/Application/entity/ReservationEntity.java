@@ -13,8 +13,7 @@ public class ReservationEntity {
     private LocalDateTime dateTime;
 
     private int duration;
-    @ManyToOne
-    private UserEntity user;
+
 
     public long getId() {
         return id;
@@ -40,11 +39,5 @@ public class ReservationEntity {
         this.duration = duration;
     }
 
-    public UserEntity getUser() {
-        return user;
-    }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
 }
