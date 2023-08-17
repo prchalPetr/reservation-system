@@ -9,11 +9,41 @@ import java.time.LocalDateTime;
 public class ReservationDTO {
     private Long Id;
     @NotNull
-    @NotBlank
     private LocalDateTime dateTime;
     @NotNull
-    @NotBlank
     @Min(value = 30)
     private Integer duration;
     private String note;
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 }

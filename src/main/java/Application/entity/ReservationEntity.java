@@ -9,9 +9,9 @@ public class ReservationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private LocalDateTime dateTime;
-
+    @Column(nullable = false)
     private int duration;
     private String note;
 
