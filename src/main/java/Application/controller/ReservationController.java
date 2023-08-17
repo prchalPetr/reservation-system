@@ -30,4 +30,8 @@ public class ReservationController {
     public String removeReservation(@PathVariable Long id){
         return reservationService.deleteReservation(id);
     }
+    @PutMapping({"/reservations/{id}","/reservations/{id}/"})
+    public ReservationDTO editReservation(@RequestBody ReservationDTO reservationDTO, @PathVariable Long id){
+        return reservationService.editReservation(reservationDTO,id);
+    }
 }
