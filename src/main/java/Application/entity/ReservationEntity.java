@@ -9,11 +9,19 @@ public class ReservationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
+    @Column(unique = true)
     private LocalDateTime dateTime;
 
     private int duration;
+    private String note;
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 
     public long getId() {
         return id;
