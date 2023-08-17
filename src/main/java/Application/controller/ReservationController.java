@@ -4,10 +4,9 @@ import Application.DTO.ReservationDTO;
 import Application.service.ReservationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("server/reservation")
@@ -18,5 +17,17 @@ public class ReservationController {
     @PostMapping({"/create", "/create/"})
     public ReservationDTO createReservation(@RequestBody @Valid ReservationDTO reservationDTO){
         return reservationService.createReservation(reservationDTO);
+    }
+    @GetMapping({"/reservations","/reservations/"})
+    public List<ReservationDTO> getAllReservations(){
+        return reservationService.getAllReservation();
+    }
+    @GetMapping({"/reservations/{id}","/reservations/{id}/"})
+    public ReservationDTO getReservation(@PathVariable Long id){
+        return reservationService.getReservation(id);
+    }
+    @DeleteMapping({"/reservations/{id}","/reservations/{id}/"})
+    public String removeReservation(@PathVariable Long id){
+        return reservationService.deleteReservation(id);
     }
 }
