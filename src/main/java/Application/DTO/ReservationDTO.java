@@ -15,6 +15,16 @@ public class ReservationDTO {
     private Integer duration;
     private String note;
 
+    private UserDTO user;
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
+    }
+
     public Long getId() {
         return Id;
     }

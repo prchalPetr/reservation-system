@@ -25,9 +25,19 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private boolean admin = false;
 
+    @OneToMany(mappedBy = "user")
+    private List<ReservationEntity> reservations = new ArrayList<>();
 
     public boolean isAdmin() {
         return admin;
+    }
+
+    public List<ReservationEntity> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<ReservationEntity> reservations) {
+        this.reservations = reservations;
     }
 
     public void setAdmin(boolean admin) {

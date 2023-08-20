@@ -32,17 +32,7 @@ public class UserController {
     }
     @GetMapping({"/user","/user/"})
     public UserDTO getCurrentUser() throws ServletException{
-        try {
-            UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDTO model = new UserDTO();
-            model.setId(user.getId());
-            model.setEmail(user.getEmail());
-            model.setName(user.getName());
-            model.setAdmin(user.isAdmin());
-            return model;
-        } catch (ClassCastException e){
-            throw new ServletException();
-        }
+        return userService.getCurrentUser();
     }
     @ExceptionHandler(ServletException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

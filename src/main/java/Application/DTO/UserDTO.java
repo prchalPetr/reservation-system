@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
 
 
 public class UserDTO {
@@ -25,6 +26,15 @@ public class UserDTO {
 
     @NotNull
     private boolean admin;
+    private List<ReservationDTO> reservations;
+
+    public List<ReservationDTO> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<ReservationDTO> reservations) {
+        this.reservations = reservations;
+    }
 
     public Long getId() {
         return Id;

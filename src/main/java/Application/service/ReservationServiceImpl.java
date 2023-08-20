@@ -3,14 +3,19 @@ package Application.service;
 import Application.DTO.ReservationDTO;
 import Application.DTO.mapper.ReservationMapper;
 import Application.entity.ReservationEntity;
+import Application.entity.UserEntity;
 import Application.entity.repository.ReservationRepository;
 import Application.service.exceptations.DuplicateDateTimeEception;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,10 +24,12 @@ public class ReservationServiceImpl implements ReservationService{
     private ReservationRepository reservationRepository;
     @Autowired
     private ReservationMapper reservationMapper;
+
     @Override
     public ReservationDTO createReservation(ReservationDTO reservationDTO) {
         try {
             ReservationEntity entity = reservationMapper.reservationToEntity(reservationDTO);
+            entity.setUser((UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             entity = reservationRepository.save(entity);
             return reservationMapper.reservationToDTO(entity);
         } catch (DataIntegrityViolationException e){
@@ -70,4 +77,8 @@ public class ReservationServiceImpl implements ReservationService{
             throw new EntityNotFoundException();
         }
     }
+
+
+
+
 }

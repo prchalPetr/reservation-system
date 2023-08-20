@@ -13,7 +13,18 @@ public class ReservationEntity {
     private LocalDateTime dateTime;
     @Column(nullable = false)
     private int duration;
+
+    @ManyToOne
+    private UserEntity user;
     private String note;
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
 
     public String getNote() {
         return note;
