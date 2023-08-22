@@ -12,19 +12,19 @@ import java.util.List;
 public class UserDTO {
     private Long Id;
 
-    @NotBlank
+
     private String name;
     @Email
-    @NotBlank
+
     private String email;
-    @NotBlank
+
     private String phoneNumber;
 
-    @NotBlank
+
     @Size(min = 6)
     private String password;
 
-    @NotNull
+
     private boolean admin;
     private List<ReservationDTO> reservations;
 

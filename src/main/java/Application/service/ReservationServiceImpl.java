@@ -6,6 +6,7 @@ import Application.entity.ReservationEntity;
 import Application.entity.UserEntity;
 import Application.entity.repository.ReservationRepository;
 import Application.service.exceptations.DuplicateDateTimeEception;
+import Application.service.exceptations.WrongDateTimeReservationException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,12 +27,16 @@ public class ReservationServiceImpl implements ReservationService{
     private ReservationMapper reservationMapper;
 
     @Override
-    public ReservationDTO createReservation(ReservationDTO reservationDTO) {
+    public ReservationDTO createReservation(ReservationDTO reservationDTO) throws Exception {
         try {
-            ReservationEntity entity = reservationMapper.reservationToEntity(reservationDTO);
-            entity.setUser((UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-            entity = reservationRepository.save(entity);
-            return reservationMapper.reservationToDTO(entity);
+            final ReservationEntity entity = reservationMapper.reservationToEntity(reservationDTO);
+           // entity.setUser((UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            if (getAllReservation().stream().anyMatch(databaze -> entity.getStartReservation().compareTo(databaze.getStartReservation()) >= 0 && entity.getStartReservation().compareTo(databaze.getEndReservation()) < 0 || entity.getEndReservation().compareTo(databaze.getStartReservation()) > 0 && entity.getEndReservation().compareTo(databaze.getEndReservation()) <= 0 || databaze.getStartReservation().compareTo(entity.getStartReservation()) >= 0 && databaze.getStartReservation().compareTo(entity.getEndReservation()) < 0))
+            {
+                throw new WrongDateTimeReservationException();
+            }
+            else
+                return reservationMapper.reservationToDTO(reservationRepository.save(entity));
         } catch (DataIntegrityViolationException e){
             throw new DuplicateDateTimeEception();
         }
@@ -40,7 +45,8 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     public List<ReservationDTO> getAllReservation() {
         List<ReservationEntity> entities = reservationRepository.findAll();
-        List<ReservationDTO> reservationDTOS = entities.stream().map(o -> reservationMapper.reservationToDTO(o)).toList();
+        List<ReservationDTO> reservationDTOS = new ArrayList<>();
+        entities.stream().forEach(o -> reservationDTOS.add(reservationMapper.reservationToDTO(o)));
         return reservationDTOS;
     }
 

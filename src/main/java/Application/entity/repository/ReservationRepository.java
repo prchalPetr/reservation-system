@@ -10,6 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Long> {
-    Optional<ReservationEntity> findByDateTime(LocalDateTime dateTime);
+
 
 }

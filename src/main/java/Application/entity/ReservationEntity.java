@@ -10,9 +10,9 @@ public class ReservationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(unique = true, nullable = false)
-    private LocalDateTime dateTime;
+    private LocalDateTime startReservation;
     @Column(nullable = false)
-    private int duration;
+    private LocalDateTime endReservation;
 
     @ManyToOne
     private UserEntity user;
@@ -42,21 +42,19 @@ public class ReservationEntity {
         this.id = id;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getStartReservation() {
+        return startReservation;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setStartReservation(LocalDateTime startReservation) {
+        this.startReservation = startReservation;
     }
 
-    public int getDuration() {
-        return duration;
+    public LocalDateTime getEndReservation() {
+        return endReservation;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
+    public void setEndReservation(LocalDateTime endReservation) {
+        this.endReservation = endReservation;
     }
-
-
 }

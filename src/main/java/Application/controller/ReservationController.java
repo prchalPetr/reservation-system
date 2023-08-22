@@ -15,7 +15,7 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @PostMapping({"/create", "/create/"})
-    public ReservationDTO createReservation(@RequestBody @Valid ReservationDTO reservationDTO){
+    public ReservationDTO createReservation(@RequestBody @Valid ReservationDTO reservationDTO) throws Exception {
         return reservationService.createReservation(reservationDTO);
     }
     @GetMapping({"/reservations","/reservations/"})

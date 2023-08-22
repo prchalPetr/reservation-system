@@ -9,10 +9,9 @@ import java.time.LocalDateTime;
 public class ReservationDTO {
     private Long Id;
     @NotNull
-    private LocalDateTime dateTime;
+    private LocalDateTime startReservation;
     @NotNull
-    @Min(value = 30)
-    private Integer duration;
+    private LocalDateTime endReservation;
     private String note;
 
     private UserDTO user;
@@ -33,20 +32,20 @@ public class ReservationDTO {
         Id = id;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getStartReservation() {
+        return startReservation;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setStartReservation(LocalDateTime startReservation) {
+        this.startReservation = startReservation;
     }
 
-    public Integer getDuration() {
-        return duration;
+    public LocalDateTime getEndReservation() {
+        return endReservation;
     }
 
-    public void setDuration(Integer duration) {
-        this.duration = duration;
+    public void setEndReservation(LocalDateTime endReservation) {
+        this.endReservation = endReservation;
     }
 
     public String getNote() {
