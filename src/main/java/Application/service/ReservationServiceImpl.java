@@ -2,6 +2,7 @@ package Application.service;
 
 import Application.DTO.ReservationDTO;
 import Application.DTO.mapper.ReservationMapper;
+import Application.DTO.mapper.UserMapper;
 import Application.entity.ReservationEntity;
 import Application.entity.UserEntity;
 import Application.entity.repository.ReservationRepository;
@@ -25,12 +26,14 @@ public class ReservationServiceImpl implements ReservationService{
     private ReservationRepository reservationRepository;
     @Autowired
     private ReservationMapper reservationMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public ReservationDTO createReservation(ReservationDTO reservationDTO) throws Exception {
         try {
             final ReservationEntity entity = reservationMapper.reservationToEntity(reservationDTO);
-           // entity.setUser((UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            entity.setUser((UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             if (getAllReservation().stream().anyMatch(databaze -> entity.getStartReservation().compareTo(databaze.getStartReservation()) >= 0 && entity.getStartReservation().compareTo(databaze.getEndReservation()) < 0 || entity.getEndReservation().compareTo(databaze.getStartReservation()) > 0 && entity.getEndReservation().compareTo(databaze.getEndReservation()) <= 0 || databaze.getStartReservation().compareTo(entity.getStartReservation()) >= 0 && databaze.getStartReservation().compareTo(entity.getEndReservation()) < 0))
             {
                 throw new WrongDateTimeReservationException();
@@ -47,6 +50,7 @@ public class ReservationServiceImpl implements ReservationService{
         List<ReservationEntity> entities = reservationRepository.findAll();
         List<ReservationDTO> reservationDTOS = new ArrayList<>();
         entities.stream().forEach(o -> reservationDTOS.add(reservationMapper.reservationToDTO(o)));
+
         return reservationDTOS;
     }
 
