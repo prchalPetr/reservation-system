@@ -32,6 +32,8 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     public ReservationDTO createReservation(ReservationDTO reservationDTO) throws Exception {
         try {
+            if (reservationDTO.getEndReservation().compareTo(reservationDTO.getStartReservation()) <= 0)
+                throw new WrongDateTimeReservationException();
             final ReservationEntity entity = reservationMapper.reservationToEntity(reservationDTO);
             entity.setUser((UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             if (getAllReservation().stream().anyMatch(databaze -> entity.getStartReservation().compareTo(databaze.getStartReservation()) >= 0 && entity.getStartReservation().compareTo(databaze.getEndReservation()) < 0 || entity.getEndReservation().compareTo(databaze.getStartReservation()) > 0 && entity.getEndReservation().compareTo(databaze.getEndReservation()) <= 0 || databaze.getStartReservation().compareTo(entity.getStartReservation()) >= 0 && databaze.getStartReservation().compareTo(entity.getEndReservation()) < 0))
