@@ -36,7 +36,7 @@ public class ReservationServiceImpl implements ReservationService{
                 throw new WrongDateTimeReservationException();
             final ReservationEntity entity = reservationMapper.reservationToEntity(reservationDTO);
             entity.setUser((UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-            if (getAllReservation().stream().anyMatch(databaze -> entity.getStartReservation().compareTo(databaze.getStartReservation()) >= 0 && entity.getStartReservation().compareTo(databaze.getEndReservation()) < 0 || entity.getEndReservation().compareTo(databaze.getStartReservation()) > 0 && entity.getEndReservation().compareTo(databaze.getEndReservation()) <= 0 || databaze.getStartReservation().compareTo(entity.getStartReservation()) >= 0 && databaze.getStartReservation().compareTo(entity.getEndReservation()) < 0))
+            if (checkOccupancy(reservationDTO))
             {
                 throw new WrongDateTimeReservationException();
             }
@@ -78,10 +78,12 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
-    public ReservationDTO editReservation(ReservationDTO reservationDTO,Long id) {
+    public ReservationDTO editReservation(ReservationDTO reservationDTO,Long id) throws WrongDateTimeReservationException {
         try {
             reservationDTO.setId(id);
             ReservationEntity entity = reservationRepository.getReferenceById(id);
+            if (checkOccupancy(reservationDTO))
+                throw new WrongDateTimeReservationException();
             reservationMapper.updateReservationEntity(reservationDTO, entity);
             ReservationEntity savedEntity = reservationRepository.save(entity);
             return reservationMapper.reservationToDTO(savedEntity);
@@ -89,7 +91,9 @@ public class ReservationServiceImpl implements ReservationService{
             throw new EntityNotFoundException();
         }
     }
-
+    private Boolean checkOccupancy(ReservationDTO reservationDTO){
+     return getAllReservation().stream().anyMatch(databaze -> reservationDTO.getStartReservation().compareTo(databaze.getStartReservation()) >= 0 && reservationDTO.getStartReservation().compareTo(databaze.getEndReservation()) < 0 || reservationDTO.getEndReservation().compareTo(databaze.getStartReservation()) > 0 && reservationDTO.getEndReservation().compareTo(databaze.getEndReservation()) <= 0 || databaze.getStartReservation().compareTo(reservationDTO.getStartReservation()) >= 0 && databaze.getStartReservation().compareTo(reservationDTO.getEndReservation()) < 0);
+    }
 
 
 

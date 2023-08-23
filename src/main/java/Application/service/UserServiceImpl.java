@@ -57,7 +57,6 @@ public class UserServiceImpl implements UserService{
             model.setEmail(userEntity.getEmail());
             model.setName(userEntity.getName());
             model.setAdmin(userEntity.isAdmin());
-            model.setReservations(userEntity.getReservations().stream().map(res -> reservationMapper.reservationToDTO(res)).toList());
             return model;
         } catch (ClassCastException e){
             throw new ServletException();

@@ -2,6 +2,7 @@ package Application.controller;
 
 import Application.DTO.ReservationDTO;
 import Application.service.ReservationService;
+import Application.service.exceptations.WrongDateTimeReservationException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class ReservationController {
         return reservationService.deleteReservation(id);
     }
     @PutMapping({"/reservations/{id}","/reservations/{id}/"})
-    public ReservationDTO editReservation(@RequestBody ReservationDTO reservationDTO, @PathVariable Long id){
+    public ReservationDTO editReservation(@RequestBody ReservationDTO reservationDTO, @PathVariable Long id) throws WrongDateTimeReservationException {
         return reservationService.editReservation(reservationDTO,id);
     }
 }

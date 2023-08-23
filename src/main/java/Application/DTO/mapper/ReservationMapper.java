@@ -19,9 +19,18 @@ public interface ReservationMapper {
     ReservationDTO reservationToDTO(ReservationEntity source);
     @Mapping(target = "user", ignore = true)
     ReservationEntity reservationToEntity(ReservationDTO source);
+    @Mapping(target = "user", expression = "java(updateUser(source))")
     void updateReservationEntity(ReservationDTO source, @MappingTarget ReservationEntity target);
     default UserDTO getUser(ReservationEntity source){
         UserDTO user = new UserDTO();
+        user.setName(source.getUser().getName());
+        user.setEmail(source.getUser().getEmail());
+        user.setId(source.getUser().getId());
+        user.setPhoneNumber(source.getUser().getPhoneNumber());
+        return user;
+    }
+    default UserEntity updateUser(ReservationDTO source){
+        UserEntity user = new UserEntity();
         user.setName(source.getUser().getName());
         user.setEmail(source.getUser().getEmail());
         user.setId(source.getUser().getId());
