@@ -29,6 +29,12 @@ public class ReservationServiceImpl implements ReservationService{
     @Autowired
     private UserMapper userMapper;
 
+    /**
+     * Metoda na vytvoření rezervace
+     * @param reservationDTO - rezervace k vytvoření
+     * @return  - vyvtořená rezervace typu ReservationDTO
+     * @throws Exception - ošetření obsazenosti a nesmyslných hodnot
+     */
     @Override
     public ReservationDTO createReservation(ReservationDTO reservationDTO) throws Exception {
         try {
@@ -47,6 +53,10 @@ public class ReservationServiceImpl implements ReservationService{
         }
     }
 
+    /**
+     * Metoda na získání všech vyvtvořených rezervacích
+     * @return - list typu ReservationDTO, který obsahuje všechny vytvořené rezervace
+     */
     @Override
     public List<ReservationDTO> getAllReservation() {
         List<ReservationEntity> entities = reservationRepository.findAll();
@@ -56,6 +66,11 @@ public class ReservationServiceImpl implements ReservationService{
         return reservationDTOS;
     }
 
+    /**
+     * Metoda na vyhledání konkrétní rezervace
+     * @param id - Id rezervace, o které chceme detailní informace
+     * @return - hledaná rezervace typu ReservationDTO
+     */
     @Override
     public ReservationDTO getReservation(Long id) {
         try {
@@ -66,6 +81,11 @@ public class ReservationServiceImpl implements ReservationService{
         }
     }
 
+    /**
+     * Metoda na smazání konkrétní rezervace
+     * @param id - Id rezervace, o které chceme smazat
+     * @return - informaci o smazání
+     */
     @Override
     public String deleteReservation(Long id) {
         try {
@@ -77,6 +97,13 @@ public class ReservationServiceImpl implements ReservationService{
         }
     }
 
+    /**
+     * Metoda na editaci rezervace
+     * @param reservationDTO - nové hodnoty rezervace, kterou chceme změnit
+     * @param id - Id rezervace, o které chceme změnit
+     * @return  - uložená a změněná rezervace
+     * @throws WrongDateTimeReservationException - ošetření obsazenosti a nesmyslných hodnot
+     */
     @Override
     public ReservationDTO editReservation(ReservationDTO reservationDTO,Long id) throws WrongDateTimeReservationException {
         try {
@@ -91,6 +118,12 @@ public class ReservationServiceImpl implements ReservationService{
             throw new EntityNotFoundException();
         }
     }
+
+    /**
+     * Metoda na ošetření obsazenosti a nesmyslných hodnot
+     * @param reservationDTO - rezervace, která se má otestovat, zda splňuje podmínky
+     * @return - Boolean, zda podmínky jsou splněny, či nikoliv
+     */
     private Boolean checkOccupancy(ReservationDTO reservationDTO){
      return getAllReservation().stream().anyMatch(databaze -> reservationDTO.getStartReservation().compareTo(databaze.getStartReservation()) >= 0 && reservationDTO.getStartReservation().compareTo(databaze.getEndReservation()) < 0 || reservationDTO.getEndReservation().compareTo(databaze.getStartReservation()) > 0 && reservationDTO.getEndReservation().compareTo(databaze.getEndReservation()) <= 0 || databaze.getStartReservation().compareTo(reservationDTO.getStartReservation()) >= 0 && databaze.getStartReservation().compareTo(reservationDTO.getEndReservation()) < 0);
     }

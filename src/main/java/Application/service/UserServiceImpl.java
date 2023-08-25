@@ -27,6 +27,12 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
     @Autowired
     private ReservationMapper reservationMapper;
+
+    /**
+     * Metoda na registraci nových uživatelů, v případě obsazeného emailu se vyhodí chyba
+     * @param userDTO - uživatel, který se má zaregistrovat
+     * @return - zaregistrovaný uživatel bez hesla typu UserDTO
+     */
     @Override
     public UserDTO registration(UserDTO userDTO) {
         try {
@@ -48,6 +54,11 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    /**
+     * Metoda na získání příhlášeného uživatele
+     * @return - přihlášený uživatel bez hesla typu UserDTO
+     * @throws ServletException - chyba v případě, že se nepodaří získat přihlášeného uživatele
+     */
     @Override
     public UserDTO getCurrentUser() throws ServletException {
         try {
@@ -63,6 +74,12 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    /**
+     * Metoda na získání základních informací o uživateli pomocí emailu
+     * @param username - email hledaného uživatele
+     * @return - základní informace o uživateli
+     * @throws UsernameNotFoundException - uživatel nebyl nalezen v databázi
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException("Email: " + username + " not found"));
