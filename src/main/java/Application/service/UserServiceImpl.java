@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    /**
+      /**
      * Metoda na získání základních informací o uživateli pomocí emailu
      * @param username - email hledaného uživatele
      * @return - základní informace o uživateli

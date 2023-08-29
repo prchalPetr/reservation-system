@@ -1,6 +1,7 @@
 package Application.service;
 
 import Application.DTO.ReservationDTO;
+import Application.DTO.UserDTO;
 import Application.entity.UserEntity;
 import Application.service.exceptations.WrongDateTimeReservationException;
 
@@ -11,6 +12,7 @@ public interface ReservationService {
     List<ReservationDTO> getAllReservation();
     ReservationDTO getReservation(Long id);
     String deleteReservation(Long id);
-    ReservationDTO editReservation(ReservationDTO reservationDTO,Long id) throws WrongDateTimeReservationException;
+    ReservationDTO editReservation(ReservationDTO reservationDTO, Long id, UserDTO userDTO) throws WrongDateTimeReservationException;
+    List<ReservationDTO> getAllReservationFromUser(String email);
 
 }

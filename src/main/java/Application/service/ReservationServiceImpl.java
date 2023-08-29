@@ -1,6 +1,7 @@
 package Application.service;
 
 import Application.DTO.ReservationDTO;
+import Application.DTO.UserDTO;
 import Application.DTO.mapper.ReservationMapper;
 import Application.DTO.mapper.UserMapper;
 import Application.entity.ReservationEntity;
@@ -28,6 +29,8 @@ public class ReservationServiceImpl implements ReservationService{
     private ReservationMapper reservationMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserService userService;
 
     /**
      * Metoda na vytvoření rezervace
@@ -41,7 +44,7 @@ public class ReservationServiceImpl implements ReservationService{
             if (reservationDTO.getEndReservation().compareTo(reservationDTO.getStartReservation()) <= 0)
                 throw new WrongDateTimeReservationException();
             final ReservationEntity entity = reservationMapper.reservationToEntity(reservationDTO);
-            entity.setUser((UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            entity.setUser(userMapper.userDTOtoEntity(userService.getCurrentUser()));
             if (checkOccupancy(reservationDTO))
             {
                 throw new WrongDateTimeReservationException();
@@ -60,10 +63,7 @@ public class ReservationServiceImpl implements ReservationService{
     @Override
     public List<ReservationDTO> getAllReservation() {
         List<ReservationEntity> entities = reservationRepository.findAll();
-        List<ReservationDTO> reservationDTOS = new ArrayList<>();
-        entities.stream().forEach(o -> reservationDTOS.add(reservationMapper.reservationToDTO(o)));
-
-        return reservationDTOS;
+        return convertListReservationEntityToListDTO(entities);
     }
 
     /**
@@ -101,22 +101,32 @@ public class ReservationServiceImpl implements ReservationService{
      * Metoda na editaci rezervace
      * @param reservationDTO - nové hodnoty rezervace, kterou chceme změnit
      * @param id - Id rezervace, o které chceme změnit
+     * @param userDTO - aktuálně přihlášený user
      * @return  - uložená a změněná rezervace
      * @throws WrongDateTimeReservationException - ošetření obsazenosti a nesmyslných hodnot
      */
     @Override
-    public ReservationDTO editReservation(ReservationDTO reservationDTO,Long id) throws WrongDateTimeReservationException {
+    public ReservationDTO editReservation(ReservationDTO reservationDTO, Long id, UserDTO userDTO) throws WrongDateTimeReservationException {
         try {
             reservationDTO.setId(id);
             ReservationEntity entity = reservationRepository.getReferenceById(id);
-            if (checkOccupancy(reservationDTO))
-                throw new WrongDateTimeReservationException();
-            reservationMapper.updateReservationEntity(reservationDTO, entity);
-            ReservationEntity savedEntity = reservationRepository.save(entity);
-            return reservationMapper.reservationToDTO(savedEntity);
+            if (entity.getUser().getEmail().equals(userDTO.getEmail()) || userDTO.isAdmin()){
+                if (checkOccupancy(reservationDTO))
+                    throw new WrongDateTimeReservationException();
+                reservationMapper.updateReservationEntity(reservationDTO, entity);
+                ReservationEntity savedEntity = reservationRepository.save(entity);
+                return reservationMapper.reservationToDTO(savedEntity);
+            }
+           throw new RuntimeException();
         }catch (RuntimeException e){
             throw new EntityNotFoundException();
         }
+    }
+
+    @Override
+    public List<ReservationDTO> getAllReservationFromUser(String email) {
+        List<ReservationEntity> entities = reservationRepository.getAllReservationFromUser(email);
+        return convertListReservationEntityToListDTO(entities);
     }
 
     /**
@@ -127,7 +137,11 @@ public class ReservationServiceImpl implements ReservationService{
     private Boolean checkOccupancy(ReservationDTO reservationDTO){
      return getAllReservation().stream().anyMatch(databaze -> reservationDTO.getStartReservation().compareTo(databaze.getStartReservation()) >= 0 && reservationDTO.getStartReservation().compareTo(databaze.getEndReservation()) < 0 || reservationDTO.getEndReservation().compareTo(databaze.getStartReservation()) > 0 && reservationDTO.getEndReservation().compareTo(databaze.getEndReservation()) <= 0 || databaze.getStartReservation().compareTo(reservationDTO.getStartReservation()) >= 0 && databaze.getStartReservation().compareTo(reservationDTO.getEndReservation()) < 0);
     }
-
+    private List<ReservationDTO> convertListReservationEntityToListDTO(List<ReservationEntity> entities){
+        List<ReservationDTO> reservationDTOS = new ArrayList<>();
+        entities.stream().forEach(o -> reservationDTOS.add(reservationMapper.reservationToDTO(o)));
+        return reservationDTOS;
+    }
 
 
 }
