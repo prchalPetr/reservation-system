@@ -5,21 +5,17 @@ import Application.DTO.UserDTO;
 import Application.DTO.mapper.ReservationMapper;
 import Application.DTO.mapper.UserMapper;
 import Application.entity.ReservationEntity;
-import Application.entity.UserEntity;
 import Application.entity.repository.ReservationRepository;
 import Application.service.exceptations.DuplicateDateTimeEception;
 import Application.service.exceptations.WrongDateTimeReservationException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ReservationServiceImpl implements ReservationService{
@@ -81,6 +77,7 @@ public class ReservationServiceImpl implements ReservationService{
         }
     }
 
+
     /**
      * Metoda na smazání konkrétní rezervace
      * @param id - Id rezervace, o které chceme smazat
@@ -130,6 +127,17 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     /**
+     * Metoda na nalezení rezervací v daný den
+     * @param tagetDay - den, kde chceme vědět, jaké jsou rezervace
+     * @return - list rezervací v daný den
+     */
+    @Override
+    public List<ReservationDTO> getAllAtDay(LocalDate tagetDay) {
+        List<ReservationEntity> entities = reservationRepository.findAll().stream().filter(entita -> entita.getStartReservation().getDayOfYear() == tagetDay.getDayOfYear()).toList();
+        return convertListReservationEntityToListDTO(entities);
+    }
+
+    /**
      * Metoda na ošetření obsazenosti a nesmyslných hodnot
      * @param reservationDTO - rezervace, která se má otestovat, zda splňuje podmínky
      * @return - Boolean, zda podmínky jsou splněny, či nikoliv
@@ -137,9 +145,15 @@ public class ReservationServiceImpl implements ReservationService{
     private Boolean checkOccupancy(ReservationDTO reservationDTO){
      return getAllReservation().stream().anyMatch(databaze -> reservationDTO.getStartReservation().compareTo(databaze.getStartReservation()) >= 0 && reservationDTO.getStartReservation().compareTo(databaze.getEndReservation()) < 0 || reservationDTO.getEndReservation().compareTo(databaze.getStartReservation()) > 0 && reservationDTO.getEndReservation().compareTo(databaze.getEndReservation()) <= 0 || databaze.getStartReservation().compareTo(reservationDTO.getStartReservation()) >= 0 && databaze.getStartReservation().compareTo(reservationDTO.getEndReservation()) < 0);
     }
+
+    /**
+     * Pomocná metoda na převed listu typu ReservationEntity na list typu ReservationDTO
+     * @param entities - list typu ReservationEntity
+     * @return - list typu ReservationDTO
+     */
     private List<ReservationDTO> convertListReservationEntityToListDTO(List<ReservationEntity> entities){
         List<ReservationDTO> reservationDTOS = new ArrayList<>();
-        entities.stream().forEach(o -> reservationDTOS.add(reservationMapper.reservationToDTO(o)));
+        entities.forEach(o -> reservationDTOS.add(reservationMapper.reservationToDTO(o)));
         return reservationDTOS;
     }
 

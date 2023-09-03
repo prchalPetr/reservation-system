@@ -5,6 +5,7 @@ import Application.DTO.UserDTO;
 import Application.entity.UserEntity;
 import Application.service.exceptations.WrongDateTimeReservationException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationService {
@@ -14,5 +15,6 @@ public interface ReservationService {
     String deleteReservation(Long id);
     ReservationDTO editReservation(ReservationDTO reservationDTO, Long id, UserDTO userDTO) throws WrongDateTimeReservationException;
     List<ReservationDTO> getAllReservationFromUser(String email);
+    List<ReservationDTO> getAllAtDay(LocalDate tagetDay);
 
 }

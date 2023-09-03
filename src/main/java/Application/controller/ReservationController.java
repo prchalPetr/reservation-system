@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 
 @RestController
@@ -25,24 +28,28 @@ public class ReservationController {
     public ReservationDTO createReservation(@RequestBody @Valid ReservationDTO reservationDTO) throws Exception {
         return reservationService.createReservation(reservationDTO);
     }
-    @GetMapping({"/reservations","/reservations/"})
+    @GetMapping({"/all","/all/"})
     public List<ReservationDTO> getAllReservations(){
         return reservationService.getAllReservation();
     }
-    @GetMapping({"/MyReservations{email}","/MyReservations/{email}"})
+    @GetMapping({"/myReservations/{email}","/myReservations/{email}"})
     public List<ReservationDTO> getAllUserReservations(@PathVariable String email){
         return reservationService.getAllReservationFromUser(email);
     }
-    @GetMapping({"/reservations/{id}","/reservations/{id}/"})
+    @GetMapping({"/{id}","/{id}/"})
     public ReservationDTO getReservation(@PathVariable Long id){
         return reservationService.getReservation(id);
     }
-    @DeleteMapping({"/reservations/{id}","/reservations/{id}/"})
+    @DeleteMapping({"/{id}","/{id}/"})
     public String removeReservation(@PathVariable Long id){
         return reservationService.deleteReservation(id);
     }
-    @PutMapping({"/reservations/{id}","/reservations/{id}/"})
+    @PutMapping({"/{id}","/{id}/"})
     public ReservationDTO editReservation(@RequestBody ReservationDTO reservationDTO, @PathVariable Long id) throws WrongDateTimeReservationException, ServletException {
         return reservationService.editReservation(reservationDTO,id,userService.getCurrentUser());
+    }
+    @GetMapping({"/atDay/{targetDate}", "/atDay/{targetDate}/"})
+    public List<ReservationDTO> getAllReservationsAtDay(@PathVariable String targetDate){
+        return reservationService.getAllAtDay(LocalDate.parse(targetDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     }
 }
