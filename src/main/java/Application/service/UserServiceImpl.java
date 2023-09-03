@@ -68,6 +68,7 @@ public class UserServiceImpl implements UserService{
             model.setEmail(userEntity.getEmail());
             model.setName(userEntity.getName());
             model.setAdmin(userEntity.isAdmin());
+            model.setPhoneNumber(userEntity.getPhoneNumber());
             return model;
         } catch (ClassCastException e){
             throw new ServletException();

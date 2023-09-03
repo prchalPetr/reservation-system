@@ -1,6 +1,9 @@
 package Application.DTO;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,20 +15,17 @@ import java.util.List;
 public class UserDTO {
     private Long Id;
 
-
     private String name;
-    @Email
 
     private String email;
 
     private String phoneNumber;
-
-
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Size(min = 6)
     private String password;
-
-
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean admin;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<ReservationDTO> reservations;
 
     public List<ReservationDTO> getReservations() {

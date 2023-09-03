@@ -120,6 +120,11 @@ public class ReservationServiceImpl implements ReservationService{
         }
     }
 
+    /**
+     * Metoda na vyhledání rezervací vazající se na konkrétního uživatele
+     * @param email - email uživatele
+     * @return - list všech rezervací, které má uživatel
+     */
     @Override
     public List<ReservationDTO> getAllReservationFromUser(String email) {
         List<ReservationEntity> entities = reservationRepository.getAllReservationFromUser(email);
