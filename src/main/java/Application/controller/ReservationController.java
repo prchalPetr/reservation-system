@@ -12,8 +12,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.format.FormatStyle;
 import java.util.List;
 
@@ -50,12 +52,12 @@ public class ReservationController {
         return reservationService.editReservation(reservationDTO,id,userService.getCurrentUser());
     }
     @GetMapping({"/atDay/{targetDate}", "/atDay/{targetDate}/"})
-    public List<ReservationDTO> getAllReservationsAtDay(@PathVariable String targetDate) throws IOException {
+    public List<ReservationDTO> getAllReservationsAtDay(@PathVariable String targetDate) throws Exception {
         try {
             LocalDate localDate = LocalDate.parse(targetDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             return reservationService.getAllAtDay(localDate);
         } catch (Exception e){
-            throw new IOException();
+            throw new Exception();
         }
 
     }
