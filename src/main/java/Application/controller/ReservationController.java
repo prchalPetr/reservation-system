@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -49,7 +50,13 @@ public class ReservationController {
         return reservationService.editReservation(reservationDTO,id,userService.getCurrentUser());
     }
     @GetMapping({"/atDay/{targetDate}", "/atDay/{targetDate}/"})
-    public List<ReservationDTO> getAllReservationsAtDay(@PathVariable String targetDate){
-        return reservationService.getAllAtDay(LocalDate.parse(targetDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+    public List<ReservationDTO> getAllReservationsAtDay(@PathVariable String targetDate) throws IOException {
+        try {
+            LocalDate localDate = LocalDate.parse(targetDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            return reservationService.getAllAtDay(localDate);
+        } catch (Exception e){
+            throw new IOException();
+        }
+
     }
 }
