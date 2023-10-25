@@ -6,6 +6,7 @@ import Application.DTO.mapper.ReservationMapper;
 import Application.DTO.mapper.UserMapper;
 import Application.entity.ReservationEntity;
 import Application.entity.repository.ReservationRepository;
+import Application.service.exceptations.BusyDateTimeReservationException;
 import Application.service.exceptations.DuplicateDateTimeEception;
 import Application.service.exceptations.WrongDateTimeReservationException;
 import jakarta.persistence.EntityNotFoundException;
@@ -43,7 +44,7 @@ public class ReservationServiceImpl implements ReservationService{
             entity.setUser(userMapper.userDTOtoEntity(userService.getCurrentUser()));
             if (checkOccupancy(reservationDTO))
             {
-                throw new WrongDateTimeReservationException();
+                throw new BusyDateTimeReservationException();
             }
             else
                 return reservationMapper.reservationToDTO(reservationRepository.save(entity));

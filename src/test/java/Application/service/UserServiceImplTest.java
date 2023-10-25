@@ -1,6 +1,7 @@
 package Application.service;
 
 import Application.DTO.UserDTO;
+import Application.DTO.mapper.UserMapper;
 import Application.configuration.SecurityConfiguration;
 import Application.entity.UserEntity;
 import Application.entity.repository.UserRepository;
@@ -35,7 +36,6 @@ public class UserServiceImplTest {
     private UserRepository userRepository;
     @InjectMocks
     private UserServiceImpl userService;
-
     private UserEntity entityUSer;
     @Before
     public void setUp() throws Exception {
