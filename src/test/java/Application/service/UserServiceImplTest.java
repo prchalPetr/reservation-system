@@ -53,7 +53,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void registration() {
+    public void registrationTest() {
         UserDTO userDTO = new UserDTO();
         userDTO.setName("Petr Prchal");
         userDTO.setEmail("petr@petr.cz");
